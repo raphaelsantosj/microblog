@@ -20,3 +20,4 @@ Route.get('/', ({ request }) => {
 })
 
 Route.post('/signup', 'UserController.signup')
+Route.post('/login', 'UserController.login')
