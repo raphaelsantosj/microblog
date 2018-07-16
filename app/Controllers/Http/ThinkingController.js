@@ -70,6 +70,25 @@ class ThinkingController {
       })
   }
 
+  async destroy ({ request, auth, params, response }) {
+      // get currently authenticated user
+      const user = auth.current.user
+
+      // get thinking with the specified ID
+      const thinking = await Tweet.query()
+          .where('user_id', user.id)
+          .where('id', params.id)
+          .firstOrFail()
+
+      await thinking.delete()
+
+      return response.json({
+          status: 'success',
+          message: 'Tweet deleted!',
+          data: null
+      })
+  }
+
 }
 
 module.exports = ThinkingController
