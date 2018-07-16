@@ -9,7 +9,7 @@ class ThinkingController {
       const user = auth.current.user
 
       // Save thinking to database
-      const thinking = await Tweet.create({
+      const thinking = await Thinking.create({
           user_id: user.id,
           thinking: request.input('thinking')
       })
@@ -19,14 +19,14 @@ class ThinkingController {
 
       return response.json({
           status: 'success',
-          message: 'Tweet posted!',
+          message: 'Thinking posted!',
           data: thinking
       })
   }
 
   async show ({ params, response }) {
       try {
-          const thinking = await Tweet.query()
+          const thinking = await Thinking.query()
               .where('id', params.id)
               .with('user')
               .with('replies')
@@ -41,7 +41,7 @@ class ThinkingController {
       } catch (error) {
           return response.status(404).json({
               status: 'error',
-              message: 'Tweet not found'
+              message: 'Thinking not found'
           })
       }
   }
@@ -51,7 +51,7 @@ class ThinkingController {
       const user = auth.current.user
 
       // get thinking with the specified ID
-      const thinking = await Tweet.find(params.id)
+      const thinking = await Thinking.find(params.id)
 
       // persist to database
       const reply = await Reply.create({
@@ -75,7 +75,7 @@ class ThinkingController {
       const user = auth.current.user
 
       // get thinking with the specified ID
-      const thinking = await Tweet.query()
+      const thinking = await Thinking.query()
           .where('user_id', user.id)
           .where('id', params.id)
           .firstOrFail()
@@ -84,7 +84,7 @@ class ThinkingController {
 
       return response.json({
           status: 'success',
-          message: 'Tweet deleted!',
+          message: 'Thinking deleted!',
           data: null
       })
   }

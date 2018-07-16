@@ -212,7 +212,7 @@ class UserController {
       // add the user's ID also to the array
       followersIds.push(user.id)
 
-      const thinkings = await Tweet.query()
+      const thinkings = await Thinking.query()
           .whereIn('user_id', followersIds)
           .with('user')
           .with('favorites')

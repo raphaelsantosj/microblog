@@ -7,7 +7,7 @@ class FavoriteSchema extends Schema {
     this.create('favorites', (table) => {
       table.increments()
       table.integer('user_id').unsigned().notNullable()
-      table.integer('tweet_id').unsigned().notNullable()
+      table.integer('thinking_id').unsigned().notNullable()
       table.timestamps()
     })
   }
