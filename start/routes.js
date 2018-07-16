@@ -28,6 +28,8 @@ Route.group(() => {
 Route.group(() => {
     Route.get('/me', 'UserController.me')
     Route.put('/update_profile', 'UserController.updateProfile')
+    Route.put('/change_password', 'UserController.changePassword');
+    Route.get(':username', 'UserController.showProfile')
   })
     .prefix('account')
     .middleware(['auth:jwt'])
