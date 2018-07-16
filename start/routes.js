@@ -47,3 +47,11 @@ Route.group(() => {
 .middleware(['auth:jwt'])
 
 Route.post('/thinking', 'ThinkingController.thinking').middleware(['auth:jwt'])
+Route.get('/thinking/:id', 'ThinkingController.show')
+Route.post('/thinkings/reply/:id', 'ThinkingController.reply').middleware(['auth:jwt']);
+
+Route.group(() => {
+    Route.post('/create', 'FavoriteController.favorite')
+})
+    .prefix('favorites')
+    .middleware(['auth:jwt'])
