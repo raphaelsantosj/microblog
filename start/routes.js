@@ -45,3 +45,5 @@ Route.group(() => {
   Route.get(':username', 'UserController.showProfile')
 })
 .middleware(['auth:jwt'])
+
+Route.post('/thinking', 'ThinkingController.thinking').middleware(['auth:jwt'])
