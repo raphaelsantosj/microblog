@@ -20,16 +20,28 @@ Route.get('/', ({ request }) => {
 })
 
 Route.group(() => {
-    Route.post('/signup', 'UserController.signup')
-    Route.post('/login', 'UserController.login')
-  })
-  .middleware(['auth:jwt'])
+  Route.post('/signup', 'UserController.signup')
+  Route.post('/login', 'UserController.login')
+})
 
 Route.group(() => {
-    Route.get('/me', 'UserController.me')
-    Route.put('/update_profile', 'UserController.updateProfile')
-    Route.put('/change_password', 'UserController.changePassword');
-    Route.get(':username', 'UserController.showProfile')
-  })
-    .prefix('account')
-    .middleware(['auth:jwt'])
+  Route.get('/me', 'UserController.me')
+  Route.put('/update_profile', 'UserController.updateProfile')
+  Route.put('/change_password', 'UserController.changePassword');
+})
+.prefix('account')
+.middleware(['auth:jwt'])
+
+Route.group(() => {
+  Route.get('/users_to_follow', 'UserController.usersToFollow');
+  Route.post('/follow/:id', 'UserController.follow')
+  Route.delete('/unfollow/:id', 'UserController.unFollow')
+  Route.get('/timeline', 'UserController.timeline')
+})
+.prefix('users')
+.middleware(['auth:jwt'])
+
+Route.group(() => {
+  Route.get(':username', 'UserController.showProfile')
+})
+.middleware(['auth:jwt'])

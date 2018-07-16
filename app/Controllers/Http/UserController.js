@@ -1,6 +1,7 @@
 'use strict'
 const User = use('App/Models/User')
 const Hash = use('Hash')
+const Thinking = use('App/Models/Thinking')
 
 class UserController {
 
@@ -155,6 +156,73 @@ class UserController {
               message: 'User not found'
           })
       }
+  }
+
+  async usersToFollow ({ params, auth, response }) {
+    // get currently authenticated user
+    const user = auth.current.user
+
+    // get the IDs of users the currently authenticated user is already following
+    const usersAlreadyFollowing = await user.following().ids()
+
+    // fetch users the currently authenticated user is not already following
+    const usersToFollow = await User.query()
+        .whereNot('id', user.id)
+        .whereNotIn('id', usersAlreadyFollowing)
+        .pick(3)
+
+    return response.json({
+        status: 'success',
+        data: usersToFollow
+    })
+  }
+
+  async follow ({ request, auth, response }) {
+      // get currently authenticated user
+      const user = auth.current.user
+
+      // add to user's followers
+      await user.following().attach(request.input('user_id'))
+
+      return response.json({
+          status: 'success',
+          data: null
+      })
+  }
+
+  async unFollow ({ params, auth, response }) {
+      // get currently authenticated user
+      const user = auth.current.user
+
+      // remove from user's followers
+      await user.following().detach(params.id)
+
+      return response.json({
+          status: 'success',
+          data: null
+      })
+  }
+
+  async timeline ({ auth, response }) {
+      const user = await User.find(auth.current.user.id)
+
+      // get an array of IDs of the user's followers
+      const followersIds = await user.following().ids()
+
+      // add the user's ID also to the array
+      followersIds.push(user.id)
+
+      const thinkings = await Tweet.query()
+          .whereIn('user_id', followersIds)
+          .with('user')
+          .with('favorites')
+          .with('replies')
+          .fetch()
+
+      return response.json({
+          status: 'success',
+          data: thinkings
+      })
   }
 
 }
